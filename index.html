@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Plank Timer</title>
+<meta name="viewport" content="width=device-width">
+  <style>
+  body {
+  font-family: system, -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #323232;
+}
+
+ul {
+  margin: 1em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+  display: block;
+  width: 100%;
+  font-size: 100%;
+  border: 0;
+  padding: 1em;
+  position: absolute;
+  bottom: 0;
+}
+
+li {
+  position: relative;
+  background: #666;
+  padding: 1em 1.5em;
+  margin: 0 1em 1em;
+  border-radius: 3em;
+  overflow: hidden;
+  color: #fff;
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progressBar {
+  left: 0;
+  top: 0;
+  position: absolute;
+  height: 100%;
+  background: rgb(52, 199, 89);
+  transition: width 1s linear;
+  width: 0;
+}
+  </style>
+</head>
+<body>
+<ul>
+  <li>
+    <div class="text">
+      Full <span>60</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+  <li>
+    <div class="text">
+      Elbow <span>30</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+  <li>
+    <div class="text">
+      Raised Leg (Left) <span>30</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+  <li>
+    <div class="text">
+      Raised Leg (Right)<span>30</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+  <li>
+    <div class="text">
+      Side (Left)<span>30</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+  <li>
+    <div class="text">
+      Side (Right)<span>30</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+  <li>
+    <div class="text">
+      Full <span>30</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+  <li>
+    <div class="text">
+      Elbow <span>60</span>
+    </div>
+    <div class="progressBar"></div>  
+  </li>
+</ul>
+
+  <button>Start</button>
+	<script>
+  const timers = document.querySelectorAll('li');
+const button = document.querySelector('button');
+var clicks = 0;
+
+button.addEventListener('click', function () {
+  clicks++;
+  if (button.innerText == 'Pause') {
+    button.innerText = 'Start';
+    window.running = false;
+  } else {
+    button.innerText = 'Pause';
+    if (clicks == 1) {
+        countDown(0);
+    }
+    window.running = true;
+  }
+});
+
+function countDown (index) {
+  let item = timers[index];
+  let timeElement = item.querySelector('span');
+  let timeInSeconds = timeElement.innerText;
+  let originalTimeInSeconds = timeInSeconds;
+
+  let timer = setInterval(function () {
+    if (timeInSeconds == 0) {
+      item.classList.remove('active');
+      clearInterval(timer);
+      index++;
+
+      if (index < timers.length) {
+	setTimeout(2000);
+        countDown(index);
+      }
+    }
+    if (window.running) {
+      timeElement.innerText = timeInSeconds;
+      timeInSeconds--;
+      item.querySelector('.progressBar').style.width = ((originalTimeInSeconds - timeInSeconds) / originalTimeInSeconds) * 100 + '%';
+    }
+  }, 1000);
+
+}
+	</script>
+
+</body>
+</html>
